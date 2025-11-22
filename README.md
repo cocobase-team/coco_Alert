@@ -2,16 +2,16 @@
 
 <div align="center">
 
-![CocoAlert Banner](https://img.shields.io/badge/CocoAlert-Zero%20Config%20Alerts-orange?style=for-the-badge&logo=react)
+![CocoAlert Banner](https://img.shields.io/badge/CocoAlert-Configurable%20Alerts-orange?style=for-the-badge&logo=react)
 
-**The simplest toast notification library for React & Next.js**
+**Beautiful, customizable toast notifications for React & Next.js**
 
 [![npm version](https://img.shields.io/npm/v/coco-alert?style=flat-square&color=success)](https://www.npmjs.com/package/coco-alert)
 [![downloads](https://img.shields.io/npm/dm/coco-alert?style=flat-square&color=blue)](https://www.npmjs.com/package/coco-alert)
 [![license](https://img.shields.io/npm/l/coco-alert?style=flat-square&color=yellow)](https://github.com/cocobase-team/coco_Alert/blob/main/LICENSE)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/coco-alert?style=flat-square&color=green)](https://bundlephobia.com/package/coco-alert)
 
-**Zero configuration. Just import and use. That's it.**
+**Simple setup. Full control. Light & Dark themes. That's it.**
 
 </div>
 
@@ -19,30 +19,12 @@
 
 ## ✨ Why CocoAlert?
 
-```javascript
-// Other libraries 😩
-import { ToastContainer, toast } from 'other-lib';
-
-function App() {
-  return (
-    <>
-      <ToastContainer position="top-right" autoClose={5000} />
-      <button onClick={() => toast.success('Hello')}>Click</button>
-    </>
-  );
-}
-
-// CocoAlert 🔥
-import coco_Alert from 'coco-alert/react';
-
-function App() {
-  return (
-    <button onClick={() => coco_Alert.success('Hello')}>Click</button>
-  );
-}
-```
-
-**No setup. No providers. No containers. Just works.** ✨
+- 🎨 **Light & Dark Mode** - Beautiful themes for any design
+- 📍 **7 Position Options** - Place alerts anywhere on screen
+- ⚡ **Simple Setup** - One container component, use anywhere
+- 🎯 **TypeScript Ready** - Full type safety included
+- 📦 **Tiny Bundle** - Only ~3KB gzipped
+- 🔧 **Zero Dependencies** - No external packages needed
 
 ---
 
@@ -54,22 +36,41 @@ npm install coco-alert
 
 ---
 
-## 🚀 Usage (It's THIS Easy!)
+## 🚀 Quick Start
 
-### **Step 1: Import**
-```javascript
-import coco_Alert from 'coco-alert/react';
+### **Step 1: Add AlertContainer to your root component**
+
+```jsx
+import { AlertContainer, coco_Alert } from 'coco-alert/react';
+
+function App() {
+  return (
+    <>
+      <AlertContainer 
+        isLightMode={false}
+        position="top-right"
+      />
+      <YourApp />
+    </>
+  );
+}
 ```
 
-### **Step 2: Use It Anywhere**
+### **Step 2: Use alerts anywhere in your app**
+
 ```javascript
-coco_Alert.success('Operation successful! 🎉');
-coco_Alert.error('Something went wrong! ❌');
-coco_Alert.warning('Be careful! ⚠️');
-coco_Alert.info('Just so you know... ℹ️');
+import { coco_Alert } from 'coco-alert/react';
+
+function MyComponent() {
+  return (
+    <button onClick={() => coco_Alert.success('It works! 🎉')}>
+      Click Me
+    </button>
+  );
+}
 ```
 
-**That's literally it. No setup, no providers, no containers!**
+**That's it! No providers, no complex setup.**
 
 ---
 
@@ -78,18 +79,29 @@ coco_Alert.info('Just so you know... ℹ️');
 ### **React (Vite, CRA)**
 
 ```jsx
-import coco_Alert from 'coco-alert/react';
+import { AlertContainer, coco_Alert } from 'coco-alert/react';
+import { useState } from 'react';
 
 function App() {
-  const handleClick = () => {
-    coco_Alert.success('Button clicked!');
-  };
+  const [isLightMode, setIsLightMode] = useState(false);
 
   return (
-    <div>
-      <h1>My App</h1>
-      <button onClick={handleClick}>Click Me</button>
-    </div>
+    <>
+      <AlertContainer 
+        isLightMode={isLightMode}
+        position="top-right"
+      />
+      
+      <div>
+        <h1>My App</h1>
+        <button onClick={() => setIsLightMode(!isLightMode)}>
+          Toggle Theme
+        </button>
+        <button onClick={() => coco_Alert.success('Success!')}>
+          Show Alert
+        </button>
+      </div>
+    </>
   );
 }
 
@@ -101,7 +113,27 @@ export default App;
 ```tsx
 'use client'; // Required for App Router!
 
-import coco_Alert from 'coco-alert/react';
+import { AlertContainer, coco_Alert } from 'coco-alert/react';
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        <AlertContainer 
+          isLightMode={false}
+          position="top-right"
+        />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+```tsx
+'use client';
+
+import { coco_Alert } from 'coco-alert/react';
 
 export default function Page() {
   return (
@@ -118,7 +150,26 @@ export default function Page() {
 ### **Next.js Pages Router**
 
 ```tsx
-import coco_Alert from 'coco-alert/react';
+// pages/_app.tsx
+import { AlertContainer } from 'coco-alert/react';
+import type { AppProps } from 'next/app';
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <>
+      <AlertContainer 
+        isLightMode={false}
+        position="top-right"
+      />
+      <Component {...pageProps} />
+    </>
+  );
+}
+```
+
+```tsx
+// pages/index.tsx
+import { coco_Alert } from 'coco-alert/react';
 
 export default function Home() {
   return (
@@ -139,7 +190,7 @@ export default function Home() {
 ### **Form Submission**
 
 ```javascript
-import coco_Alert from 'coco-alert/react';
+import { coco_Alert } from 'coco-alert/react';
 
 async function handleSubmit(e) {
   e.preventDefault();
@@ -156,7 +207,7 @@ async function handleSubmit(e) {
 ### **API Calls**
 
 ```javascript
-import coco_Alert from 'coco-alert/react';
+import { coco_Alert } from 'coco-alert/react';
 
 async function fetchData() {
   try {
@@ -175,10 +226,9 @@ async function fetchData() {
 ### **Delete Confirmation**
 
 ```javascript
-import coco_Alert from 'coco-alert/react';
+import { coco_Alert } from 'coco-alert/react';
 
 async function handleDelete(id) {
-  // Ask for confirmation
   const confirmed = await coco_Alert.confirm('Delete this item? This cannot be undone.');
   
   if (confirmed) {
@@ -194,29 +244,64 @@ async function handleDelete(id) {
 }
 ```
 
-### **File Upload**
+### **Theme Switcher**
 
 ```javascript
-import coco_Alert from 'coco-alert/react';
+import { AlertContainer, coco_Alert } from 'coco-alert/react';
+import { useState } from 'react';
 
-async function handleFileUpload(file) {
-  if (file.size > 5000000) {
-    coco_Alert.warning('File size must be less than 5MB');
-    return;
-  }
+function App() {
+  const [isDark, setIsDark] = useState(true);
 
-  try {
-    await uploadFile(file);
-    coco_Alert.success('File uploaded successfully! 📁');
-  } catch (error) {
-    coco_Alert.error('Upload failed. Please try again.');
-  }
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    coco_Alert.info(`Switched to ${!isDark ? 'dark' : 'light'} mode`);
+  };
+
+  return (
+    <>
+      <AlertContainer 
+        isLightMode={!isDark}
+        position="top-right"
+      />
+      <button onClick={toggleTheme}>
+        Toggle Theme
+      </button>
+    </>
+  );
 }
 ```
 
 ---
 
 ## 📚 API Reference
+
+### **AlertContainer Props**
+
+```typescript
+interface AlertContainerProps {
+  isLightMode?: boolean;      // Default: false (dark mode)
+  position?: AlertPosition;    // Default: "top-right"
+}
+```
+
+#### **Examples**
+
+```jsx
+// Dark mode, top-right (default)
+<AlertContainer />
+
+// Light mode, top-right
+<AlertContainer isLightMode={true} />
+
+// Dark mode, bottom-center
+<AlertContainer position="bottom-center" />
+
+// Light mode, center
+<AlertContainer isLightMode={true} position="center" />
+```
+
+---
 
 ### **Alert Methods**
 
@@ -232,23 +317,23 @@ coco_Alert.info(message, duration?, position?);
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `message` | `string` | *required* | The message to display |
-| `duration` | `number` | `4000` | Duration in milliseconds (4 seconds) |
-| `position` | `AlertPosition` | `"top-right"` | Position on screen |
+| `duration` | `number` | `4000` | Duration in milliseconds |
+| `position` | `AlertPosition` | Container's position | Override container position |
 
 #### **Examples**
 
 ```javascript
-// Simple alert (4 seconds, top-right)
+// Simple alert (uses container settings)
 coco_Alert.success('Saved!');
 
-// Custom duration (10 seconds)
+// Custom duration
 coco_Alert.error('Critical error', 10000);
 
-// Custom position
-coco_Alert.info('Loading...', 3000, 'top-center');
+// Override container position for this alert
+coco_Alert.info('Loading...', 3000, 'center');
 
 // All options
-coco_Alert.warning('Session expiring soon', 5000, 'bottom-right');
+coco_Alert.warning('Session expiring', 5000, 'bottom-right');
 ```
 
 ---
@@ -305,67 +390,118 @@ type AlertPosition =
 
 #### **Position Examples**
 
-```javascript
-// Top positions
-coco_Alert.info('Top left', 3000, 'top-left');
-coco_Alert.info('Top center', 3000, 'top-center');
-coco_Alert.info('Top right', 3000, 'top-right');
+```jsx
+// Set container position (all alerts use this by default)
+<AlertContainer position="bottom-center" />
 
-// Center
-coco_Alert.warning('Center alert', 3000, 'center');
-
-// Bottom positions
-coco_Alert.success('Bottom left', 3000, 'bottom-left');
-coco_Alert.success('Bottom center', 3000, 'bottom-center');
-coco_Alert.success('Bottom right', 3000, 'bottom-right');
+// Override position for individual alerts
+coco_Alert.info('Top alert', 3000, 'top-center');
+coco_Alert.success('Center alert', 3000, 'center');
+coco_Alert.warning('Bottom alert', 3000, 'bottom-left');
 ```
 
 ---
 
-## 🎨 Features
+## 🎨 Light & Dark Themes
+
+CocoAlert includes beautiful built-in themes:
+
+### **Dark Mode** (Default)
+- Deep, rich backgrounds
+- Vibrant accent colors
+- Perfect for dark interfaces
+- High contrast for readability
+
+### **Light Mode**
+- Clean, bright backgrounds
+- Subtle accent colors
+- Perfect for light interfaces
+- Optimized for daylight viewing
+
+#### **Examples**
+
+```jsx
+// Dark mode
+<AlertContainer isLightMode={false} />
+
+// Light mode
+<AlertContainer isLightMode={true} />
+
+// Dynamic theme based on user preference
+function App() {
+  const [isDark, setIsDark] = useState(true);
+  
+  return (
+    <AlertContainer isLightMode={!isDark} />
+  );
+}
+
+// Sync with system preference
+function App() {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  return (
+    <AlertContainer isLightMode={!prefersDark} />
+  );
+}
+```
+
+---
+
+## 🎯 Features
 
 <table>
 <tr>
 <td width="50%">
 
-### ⚡ **Zero Configuration**
-- No setup required
-- No providers needed
-- No containers to add
-- Just import and use
+### 🎨 **Themes**
+- Dark mode (default)
+- Light mode
+- Dynamic switching
+- System preference sync
 
 </td>
 <td width="50%">
 
-### 🎯 **Smart Defaults**
-- Auto-dismisses after 4s
-- Shows at top-right
-- Dark theme by default
-- Smooth animations
+### 📍 **Positions**
+- 7 position options
+- Set globally or per-alert
+- Auto-stacking
+- Responsive spacing
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 🎨 **Beautiful Design**
-- 4 alert types with colors
-- Progress bar indicator
-- Smooth slide-in animation
-- Glassmorphism effects
+### ⚡ **Simple API**
+- One container component
+- Use alerts anywhere
+- TypeScript support
+- Intuitive methods
 
 </td>
+<td width="50%">
+
+### 🎭 **Alert Types**
+- Success (green)
+- Error (red)
+- Warning (yellow)
+- Info (blue)
+- Confirm (interactive)
+
+</td>
+</tr>
+<tr>
 <td width="50%">
 
 ### 📦 **Tiny Bundle**
+- ~3KB gzipped
 - Zero dependencies
 - Pure inline styles
-- ~3KB gzipped
-- No CSS imports needed
+- No CSS imports
 
 </td>
-</tr>
-<tr>
 <td width="50%">
 
 ### 🔧 **Framework Support**
@@ -373,15 +509,6 @@ coco_Alert.success('Bottom right', 3000, 'bottom-right');
 - ✅ Next.js App Router
 - ✅ Next.js Pages Router
 - ✅ TypeScript ready
-
-</td>
-<td width="50%">
-
-### 🎭 **Advanced Features**
-- Confirmation dialogs
-- Custom durations
-- 7 position options
-- Auto-stacking alerts
 
 </td>
 </tr>
@@ -406,32 +533,51 @@ coco_Alert.success('All done! 🎉');
 coco_Alert.success('Copied!', 1000);
 ```
 
-### **Long Messages**
-```javascript
-// 10 second notification for important messages
-coco_Alert.error(
-  'Critical error occurred. Please contact support at support@example.com',
-  10000
-);
+### **Center Important Alerts**
+```jsx
+// Use center position for critical messages
+<AlertContainer position="center" />
+
+coco_Alert.warning('Your session will expire in 5 minutes', 5000);
 ```
 
-### **Center Important Alerts**
-```javascript
-// Use center position for critical messages
-coco_Alert.warning('Your session will expire in 5 minutes', 5000, 'center');
+### **Position Override**
+```jsx
+// Container uses top-right by default
+<AlertContainer position="top-right" />
+
+// But you can override for specific alerts
+coco_Alert.error('Critical error!', 5000, 'center');
+```
+
+### **Theme Synchronization**
+```jsx
+function App() {
+  const [theme, setTheme] = useState('dark');
+  
+  useEffect(() => {
+    // Listen to system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e) => setTheme(e.matches ? 'dark' : 'light');
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+  
+  return <AlertContainer isLightMode={theme === 'light'} />;
+}
 ```
 
 ---
 
 ## 🎨 Alert Types & Colors
 
-| Type | Color | Use Case | Icon |
-|------|-------|----------|------|
-| **Success** | Green | Successful operations, confirmations | ✓ |
-| **Error** | Red | Errors, failed operations | ✕ |
-| **Warning** | Yellow | Warnings, cautions | ⚠ |
-| **Info** | Blue | General information, tips | ℹ |
-| **Confirm** | Yellow | User confirmations | ? |
+| Type | Dark Mode | Light Mode | Use Case | Icon |
+|------|-----------|------------|----------|------|
+| **Success** | Green | Green | Successful operations | ✓ |
+| **Error** | Red | Red | Errors, failures | ✕ |
+| **Warning** | Yellow | Yellow | Warnings, cautions | ⚠ |
+| **Info** | Blue | Blue | General information | ℹ |
+| **Confirm** | Yellow | Yellow | User confirmations | ? |
 
 ---
 
@@ -439,13 +585,13 @@ coco_Alert.warning('Your session will expire in 5 minutes', 5000, 'center');
 
 ### **Alerts not showing?**
 
-Make sure you've imported correctly:
-```javascript
+Make sure you've added the `AlertContainer` to your root component:
+```jsx
 // ✅ Correct
-import coco_Alert from 'coco-alert/react';
+<AlertContainer />
 
-// ❌ Wrong
-import { coco_Alert } from 'coco-alert/react';
+// ❌ Wrong - no container
+coco_Alert.success('Hello'); // Won't work without container!
 ```
 
 ### **TypeScript errors?**
@@ -457,11 +603,23 @@ npm install --save-dev @types/react @types/react-dom
 
 ### **Next.js App Router issues?**
 
-Add `'use client';` at the top of your file:
+Add `'use client';` at the top of files that use alerts:
 ```javascript
 'use client';
 
-import coco_Alert from 'coco-alert/react';
+import { coco_Alert } from 'coco-alert/react';
+```
+
+### **Theme not updating?**
+
+Make sure you're using state to control `isLightMode`:
+```jsx
+// ✅ Correct
+const [isDark, setIsDark] = useState(false);
+<AlertContainer isLightMode={!isDark} />
+
+// ❌ Wrong - static value
+<AlertContainer isLightMode={false} />
 ```
 
 ---
@@ -470,12 +628,13 @@ import coco_Alert from 'coco-alert/react';
 
 | Feature | CocoAlert | react-toastify | react-hot-toast | sonner |
 |---------|-----------|----------------|-----------------|--------|
-| Setup Required | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes |
-| Provider/Container | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes |
+| Setup Required | Container only | Container + Provider | Container + Provider | Provider |
+| Light/Dark Themes | ✅ Built-in | ⚠️ Manual CSS | ⚠️ Manual CSS | ✅ Yes |
 | Bundle Size | 3KB | 8KB | 4KB | 6KB |
 | Dependencies | 0 | 2 | 1 | 3 |
 | TypeScript | ✅ Built-in | ✅ Yes | ✅ Yes | ✅ Yes |
 | Confirmation Dialog | ✅ Built-in | ❌ No | ❌ No | ❌ No |
+| Position Control | ✅ Global + Override | ✅ Yes | ✅ Yes | ⚠️ Limited |
 
 ---
 
@@ -519,6 +678,6 @@ If you find CocoAlert helpful:
 
 **Made with 💙 by [Dycoder](https://github.com/cocobase-team)**
 
-*The simplest alert library you'll ever use.*
+*Beautiful alerts with full control.*
 
 </div>

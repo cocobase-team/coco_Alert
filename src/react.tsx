@@ -1,24 +1,38 @@
 /**
- * CocoAlert - Zero-Config Alert System for React & Next.js
+ * CocoAlert - Configurable Alert System for React & Next.js
  *
  * Installation:
  * npm install coco-alert
  *
- * Usage (SUPER SIMPLE - Just import and use!):
- * import coco_Alert from 'coco-alert/react';
+ * Usage:
+ * 1. Add AlertContainer to your root component
+ * 2. Configure theme and position
+ * 3. Use coco_Alert anywhere in your app
  *
+ * import { AlertContainer, coco_Alert } from 'coco-alert/react';
+ *
+ * function App() {
+ *   return (
+ *     <>
+ *       <AlertContainer isLightMode={false} position="top-right" />
+ *       <YourComponents />
+ *     </>
+ *   );
+ * }
+ *
+ * // Then use anywhere:
  * coco_Alert.success('It works!');
- * coco_Alert.error('Oops!');
- * coco_Alert.warning('Be careful!');
- * coco_Alert.info('FYI...');
- *
- * const confirmed = await coco_Alert.confirm('Delete this?');
  */
 
 "use client";
 
-import React, { useState, useEffect, CSSProperties } from "react";
-import { createRoot } from "react-dom/client";
+import React, {
+  useState,
+  useEffect,
+  CSSProperties,
+  createContext,
+  useContext,
+} from "react";
 
 // ==========================================
 // TYPES
@@ -52,6 +66,25 @@ interface ConfirmAlert {
   onConfirm: () => void;
   onCancel: () => void;
 }
+
+interface AlertContainerProps {
+  isLightMode?: boolean;
+  position?: AlertPosition;
+}
+
+interface AlertConfig {
+  isLightMode: boolean;
+  defaultPosition: AlertPosition;
+}
+
+// ==========================================
+// CONTEXT
+// ==========================================
+
+const AlertConfigContext = createContext<AlertConfig>({
+  isLightMode: false,
+  defaultPosition: "top-right",
+});
 
 // ==========================================
 // ICONS
@@ -159,10 +192,10 @@ const X = ({ color, size = 18 }: { color: string; size?: number }) => (
 );
 
 // ==========================================
-// CONFIG
+// CONFIG - DARK & LIGHT THEMES
 // ==========================================
 
-const alertConfig: Record<
+const darkTheme: Record<
   AlertType,
   {
     bgColor: string;
@@ -212,6 +245,59 @@ const alertConfig: Record<
     icon: AlertTriangle,
     iconColor: "#facc15",
     progressColor: "#facc15",
+  },
+};
+
+const lightTheme: Record<
+  AlertType,
+  {
+    bgColor: string;
+    borderColor: string;
+    textColor: string;
+    icon: any;
+    iconColor: string;
+    progressColor: string;
+  }
+> = {
+  success: {
+    bgColor: "rgba(240, 253, 244, 0.98)",
+    borderColor: "rgba(34, 197, 94, 0.3)",
+    textColor: "#065f46",
+    icon: CheckCircle,
+    iconColor: "#059669",
+    progressColor: "#10b981",
+  },
+  error: {
+    bgColor: "rgba(254, 242, 242, 0.98)",
+    borderColor: "rgba(239, 68, 68, 0.3)",
+    textColor: "#991b1b",
+    icon: AlertCircle,
+    iconColor: "#dc2626",
+    progressColor: "#ef4444",
+  },
+  warning: {
+    bgColor: "rgba(254, 252, 232, 0.98)",
+    borderColor: "rgba(234, 179, 8, 0.3)",
+    textColor: "#713f12",
+    icon: AlertTriangle,
+    iconColor: "#ca8a04",
+    progressColor: "#eab308",
+  },
+  info: {
+    bgColor: "rgba(239, 246, 255, 0.98)",
+    borderColor: "rgba(59, 130, 246, 0.3)",
+    textColor: "#1e3a8a",
+    icon: Info,
+    iconColor: "#2563eb",
+    progressColor: "#3b82f6",
+  },
+  confirm: {
+    bgColor: "rgba(254, 252, 232, 0.98)",
+    borderColor: "rgba(234, 179, 8, 0.3)",
+    textColor: "#713f12",
+    icon: AlertTriangle,
+    iconColor: "#ca8a04",
+    progressColor: "#eab308",
   },
 };
 
@@ -276,7 +362,9 @@ const AlertItem = ({
   onClose: (id: number) => void;
 }) => {
   const [progress, setProgress] = useState(100);
-  const config = alertConfig[alert.type];
+  const { isLightMode } = useContext(AlertConfigContext);
+  const theme = isLightMode ? lightTheme : darkTheme;
+  const config = theme[alert.type];
   const Icon = config.icon;
 
   useEffect(() => {
@@ -309,7 +397,9 @@ const AlertItem = ({
     border: `1px solid ${config.borderColor}`,
     backgroundColor: config.bgColor,
     color: config.textColor,
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+    boxShadow: isLightMode
+      ? "0 4px 12px rgba(0, 0, 0, 0.1)"
+      : "0 4px 12px rgba(0, 0, 0, 0.3)",
     backdropFilter: "blur(8px)",
   };
 
@@ -370,8 +460,8 @@ const AlertItem = ({
     borderRadius: "6px",
     border: "none",
     cursor: "pointer",
-    backgroundColor: "#1e293b",
-    color: "#e2e8f0",
+    backgroundColor: isLightMode ? "#e5e7eb" : "#1e293b",
+    color: isLightMode ? "#374151" : "#e2e8f0",
     transition: "background-color 0.2s",
   };
 
@@ -385,6 +475,8 @@ const AlertItem = ({
     color: "white",
     transition: "background-color 0.2s",
   };
+
+  const closeColor = isLightMode ? "#6b7280" : "#d1d5db";
 
   if (alert.type === "confirm") {
     const confirmAlert = alert as ConfirmAlert;
@@ -448,7 +540,7 @@ const AlertItem = ({
           style={closeButtonStyle}
           aria-label="Close"
         >
-          <X color="#d1d5db" size={18} />
+          <X color={closeColor} size={18} />
         </button>
       </div>
     </div>
@@ -456,10 +548,14 @@ const AlertItem = ({
 };
 
 // ==========================================
-// ALERT CONTAINER (AUTO-MANAGED)
+// ALERT CONTAINER COMPONENT
 // ==========================================
 
-const AlertContainerComponent = () => {
+const AlertContainerComponent = ({
+  defaultPosition,
+}: {
+  defaultPosition: AlertPosition;
+}) => {
   const [alerts, setAlerts] = useState<(Alert | ConfirmAlert)[]>([]);
 
   useEffect(() => {
@@ -480,7 +576,7 @@ const AlertContainerComponent = () => {
   };
 
   const alertsByPosition = alerts.reduce((acc, alert) => {
-    const pos = alert.position || "top-right";
+    const pos = alert.position || defaultPosition;
     acc[pos] = acc[pos] || [];
     acc[pos].push(alert);
     return acc;
@@ -511,23 +607,23 @@ const AlertContainerComponent = () => {
 };
 
 // ==========================================
-// AUTO-INJECT CONTAINER
+// PUBLIC ALERT CONTAINER
 // ==========================================
 
-let containerMounted = false;
+export const AlertContainer: React.FC<AlertContainerProps> = ({
+  isLightMode = false,
+  position = "top-right",
+}) => {
+  const config: AlertConfig = {
+    isLightMode,
+    defaultPosition: position,
+  };
 
-const ensureContainer = () => {
-  if (typeof document === "undefined") return;
-  if (containerMounted) return;
-
-  const container = document.createElement("div");
-  container.id = "coco-alert-root";
-  document.body.appendChild(container);
-
-  const root = createRoot(container);
-  root.render(<AlertContainerComponent />);
-
-  containerMounted = true;
+  return (
+    <AlertConfigContext.Provider value={config}>
+      <AlertContainerComponent defaultPosition={position} />
+    </AlertConfigContext.Provider>
+  );
 };
 
 // ==========================================
@@ -544,9 +640,8 @@ const addAlert = (
   type: Exclude<AlertType, "confirm">,
   message: string,
   duration = 4000,
-  position: AlertPosition = "top-right"
+  position?: AlertPosition
 ) => {
-  ensureContainer();
   const alert: Alert = {
     id: Date.now() + Math.random(),
     type,
@@ -562,7 +657,7 @@ const addAlert = (
 // PUBLIC API
 // ==========================================
 
-const coco_Alert = {
+export const coco_Alert = {
   success: (message: string, duration?: number, position?: AlertPosition) =>
     addAlert("success", message, duration || 4000, position),
 
@@ -576,14 +671,13 @@ const coco_Alert = {
     addAlert("info", message, duration || 4000, position),
 
   confirm: (message: string, position?: AlertPosition): Promise<boolean> => {
-    ensureContainer();
     return new Promise((resolve) => {
       const id = Date.now() + Math.random();
       const confirmAlert: ConfirmAlert = {
         id,
         type: "confirm",
         message,
-        position: position || "top-right",
+        position,
         duration: 0,
         onConfirm: () => resolve(true),
         onCancel: () => resolve(false),
