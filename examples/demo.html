@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CocoAlert Demo</title>
+  </head>
+  <body style="font-family: Arial, sans-serif; padding: 40px">
+    <h1>🥥 CocoAlert Demo</h1>
+
+    <button onclick="alert.success('Operation successful!')">
+      Show Success
+    </button>
+    <button onclick="alert.error('Something went wrong!')">Show Error</button>
+    <button onclick="alert.warning('Please be careful!')">Show Warning</button>
+    <button onclick="alert.info('Just so you know...')">Show Info</button>
+
+    <script src="../src/index.js" type="module">
+      import CocoAlert from '../src/index.js';
+      window.alert = new CocoAlert();
+    </script>
+
+    <!-- Fallback for non-module -->
+    <script>
+      if (!window.alert) {
+        window.alert = new CocoAlert();
+      }
+    </script>
+  </body>
+</html>

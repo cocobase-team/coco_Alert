@@ -1,0 +1,58 @@
+{
+  "name": "coco-alert",
+  "version": "1.0.0",
+  "description": "Beautiful toast notifications for React & Next.js",
+  "main": "src/react.tsx",
+  "module": "src/react.tsx",
+  "types": "src/react.tsx",
+  "exports": {
+    "./react": {
+      "import": "./src/react.tsx",
+      "require": "./src/react.tsx",
+      "types": "./src/react.tsx"
+    }
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": [
+    "alert",
+    "toast",
+    "notification",
+    "react",
+    "nextjs",
+    "typescript"
+  ],
+  "author": "Dycoder💙",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cocobase-team/coco_Alert.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cocobase-team/coco_Alert/issues"
+  },
+  "homepage": "https://github.com/cocobase-team/coco_Alert#readme",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": false
+    },
+    "react-dom": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "typescript": "^5.9.3"
+  }
+}
