@@ -11,7 +11,7 @@
 
 "use client"; // For Next.js App Router
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, CSSProperties } from "react";
 
 // ==========================================
 // TYPES
@@ -60,49 +60,49 @@ export interface AlertContainerProps {
 }
 
 // ==========================================
-// ICONS (Inline SVG - No External Dependencies)
+// ICONS (Inline SVG)
 // ==========================================
 
-const CheckCircle = ({ className, size = 20 }: { className?: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+const CheckCircle = ({ color, size = 20 }: { color: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
     <polyline points="22 4 12 14.01 9 11.01" />
   </svg>
 );
 
-const AlertCircle = ({ className, size = 20 }: { className?: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+const AlertCircle = ({ color, size = 20 }: { color: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="8" x2="12" y2="12" />
     <line x1="12" y1="16" x2="12.01" y2="16" />
   </svg>
 );
 
-const Info = ({ className, size = 20 }: { className?: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+const Info = ({ color, size = 20 }: { color: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="16" x2="12" y2="12" />
     <line x1="12" y1="8" x2="12.01" y2="8" />
   </svg>
 );
 
-const AlertTriangle = ({ className, size = 20 }: { className?: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+const AlertTriangle = ({ color, size = 20 }: { color: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
     <line x1="12" y1="9" x2="12" y2="13" />
     <line x1="12" y1="17" x2="12.01" y2="17" />
   </svg>
 );
 
-const X = ({ className, size = 18 }: { className?: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+const X = ({ color, size = 18 }: { color: string; size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 
 // ==========================================
-// CONFIG
+// CONFIG WITH INLINE STYLES
 // ==========================================
 
 const ALERT_CONFIG = {
@@ -113,8 +113,8 @@ const ALERT_CONFIG = {
 const alertConfig: Record<
   AlertType,
   {
-    borderColor: string;
     bgColor: string;
+    borderColor: string;
     textColor: string;
     icon: any;
     iconColor: string;
@@ -122,59 +122,112 @@ const alertConfig: Record<
   }
 > = {
   success: {
-    borderColor: "border-green-500/50",
-    bgColor: "bg-green-900/70",
-    textColor: "text-gray-100",
+    bgColor: "rgba(5, 46, 22, 0.95)",
+    borderColor: "rgba(34, 197, 94, 0.5)",
+    textColor: "#f3f4f6",
     icon: CheckCircle,
-    iconColor: "text-green-400",
-    progressColor: "bg-green-400",
+    iconColor: "#4ade80",
+    progressColor: "#4ade80",
   },
   error: {
-    borderColor: "border-red-500/50",
-    bgColor: "bg-red-900/70",
-    textColor: "text-gray-100",
+    bgColor: "rgba(69, 10, 10, 0.95)",
+    borderColor: "rgba(239, 68, 68, 0.5)",
+    textColor: "#f3f4f6",
     icon: AlertCircle,
-    iconColor: "text-red-400",
-    progressColor: "bg-red-400",
+    iconColor: "#f87171",
+    progressColor: "#f87171",
   },
   warning: {
-    borderColor: "border-yellow-500/50",
-    bgColor: "bg-yellow-900/70",
-    textColor: "text-gray-100",
+    bgColor: "rgba(69, 26, 3, 0.95)",
+    borderColor: "rgba(234, 179, 8, 0.5)",
+    textColor: "#f3f4f6",
     icon: AlertTriangle,
-    iconColor: "text-yellow-400",
-    progressColor: "bg-yellow-400",
+    iconColor: "#facc15",
+    progressColor: "#facc15",
   },
   info: {
-    borderColor: "border-blue-500/50",
-    bgColor: "bg-blue-900/70",
-    textColor: "text-gray-100",
+    bgColor: "rgba(7, 29, 54, 0.95)",
+    borderColor: "rgba(59, 130, 246, 0.5)",
+    textColor: "#f3f4f6",
     icon: Info,
-    iconColor: "text-blue-400",
-    progressColor: "bg-blue-400",
+    iconColor: "#60a5fa",
+    progressColor: "#60a5fa",
   },
   confirm: {
-    borderColor: "border-yellow-500/50",
-    bgColor: "bg-yellow-900/70",
-    textColor: "text-gray-100",
+    bgColor: "rgba(69, 26, 3, 0.95)",
+    borderColor: "rgba(234, 179, 8, 0.5)",
+    textColor: "#f3f4f6",
     icon: AlertTriangle,
-    iconColor: "text-yellow-400",
-    progressColor: "bg-yellow-400",
+    iconColor: "#facc15",
+    progressColor: "#facc15",
+  },
+};
+
+// Light mode colors
+const lightModeConfig: Record<
+  AlertType,
+  {
+    bgColor: string;
+    borderColor: string;
+    textColor: string;
+  }
+> = {
+  success: {
+    bgColor: "#dcfce7",
+    borderColor: "#86efac",
+    textColor: "#166534",
+  },
+  error: {
+    bgColor: "#fee2e2",
+    borderColor: "#fca5a5",
+    textColor: "#991b1b",
+  },
+  warning: {
+    bgColor: "#fef3c7",
+    borderColor: "#fcd34d",
+    textColor: "#854d0e",
+  },
+  info: {
+    bgColor: "#dbeafe",
+    borderColor: "#93c5fd",
+    textColor: "#1e40af",
+  },
+  confirm: {
+    bgColor: "#fef3c7",
+    borderColor: "#fcd34d",
+    textColor: "#854d0e",
   },
 };
 
 // ==========================================
-// INLINE STYLES (For when Tailwind is not available)
+// POSITION STYLES
+// ==========================================
+
+const getPositionStyles = (position: AlertPosition): CSSProperties => {
+  const positions: Record<AlertPosition, CSSProperties> = {
+    "top-left": { top: "24px", left: "24px" },
+    "top-right": { top: "24px", right: "24px" },
+    "top-center": { top: "24px", left: "50%", transform: "translateX(-50%)" },
+    center: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
+    "bottom-left": { bottom: "24px", left: "24px" },
+    "bottom-right": { bottom: "24px", right: "24px" },
+    "bottom-center": { bottom: "24px", left: "50%", transform: "translateX(-50%)" },
+  };
+  return positions[position];
+};
+
+// ==========================================
+// INJECT STYLES
 // ==========================================
 
 const injectStyles = () => {
-  if (typeof document === 'undefined') return; // SSR safety
+  if (typeof document === 'undefined') return;
   if (document.getElementById('coco-alert-styles')) return;
 
   const style = document.createElement('style');
   style.id = 'coco-alert-styles';
   style.textContent = `
-    @keyframes slideDown {
+    @keyframes cocoSlideIn {
       from {
         opacity: 0;
         transform: translateY(-20px);
@@ -184,8 +237,8 @@ const injectStyles = () => {
         transform: translateY(0);
       }
     }
-    .animate-slideDown {
-      animation: slideDown 0.3s ease-out;
+    .coco-alert-animate {
+      animation: cocoSlideIn 0.3s ease-out;
     }
   `;
   document.head.appendChild(style);
@@ -202,6 +255,7 @@ const AlertItem: React.FC<AlertItemProps> = ({
 }) => {
   const [progress, setProgress] = useState(100);
   const config = alertConfig[alert.type];
+  const lightConfig = lightModeConfig[alert.type];
   const Icon = config.icon;
 
   useEffect(() => {
@@ -225,49 +279,131 @@ const AlertItem: React.FC<AlertItemProps> = ({
     }
   }, [alert, onClose]);
 
+  const alertStyle: CSSProperties = {
+    position: 'relative',
+    width: '320px',
+    marginBottom: '12px',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    border: `1px solid ${isLightMode ? lightConfig.borderColor : config.borderColor}`,
+    backgroundColor: isLightMode ? lightConfig.bgColor : config.bgColor,
+    color: isLightMode ? lightConfig.textColor : config.textColor,
+    boxShadow: isLightMode 
+      ? '0 4px 12px rgba(0, 0, 0, 0.1)' 
+      : '0 4px 12px rgba(0, 0, 0, 0.3)',
+    backdropFilter: 'blur(8px)',
+  };
+
+  const progressBarStyle: CSSProperties = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '2px',
+  };
+
+  const progressFillStyle: CSSProperties = {
+    height: '100%',
+    backgroundColor: config.progressColor,
+    width: `${progress}%`,
+    transition: 'width 0.02s linear',
+  };
+
+  const contentStyle: CSSProperties = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '12px',
+    padding: '16px',
+  };
+
+  const iconStyle: CSSProperties = {
+    flexShrink: 0,
+    marginTop: '2px',
+  };
+
+  const messageStyle: CSSProperties = {
+    flex: 1,
+    fontSize: '14px',
+    lineHeight: '1.5',
+    fontWeight: 500,
+  };
+
+  const closeButtonStyle: CSSProperties = {
+    flexShrink: 0,
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    opacity: 0.7,
+    transition: 'opacity 0.2s',
+    padding: 0,
+  };
+
+  const buttonContainerStyle: CSSProperties = {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '12px',
+    marginTop: '12px',
+  };
+
+  const cancelButtonStyle: CSSProperties = {
+    padding: '6px 12px',
+    fontSize: '12px',
+    borderRadius: '6px',
+    border: 'none',
+    cursor: 'pointer',
+    backgroundColor: isLightMode ? '#e5e7eb' : '#1e293b',
+    color: isLightMode ? '#1f2937' : '#e2e8f0',
+    transition: 'background-color 0.2s',
+  };
+
+  const confirmButtonStyle: CSSProperties = {
+    padding: '6px 12px',
+    fontSize: '12px',
+    borderRadius: '6px',
+    border: 'none',
+    cursor: 'pointer',
+    backgroundColor: '#ef4444',
+    color: 'white',
+    transition: 'background-color 0.2s',
+  };
+
   // Confirmation Dialog
   if (alert.type === "confirm") {
     const confirmAlert = alert as ConfirmAlert;
     return (
-      <div
-        className={`relative w-80 rounded-lg shadow-lg mb-3 overflow-hidden border animate-slideDown ${
-          isLightMode
-            ? "bg-white border-gray-200 shadow-gray-200"
-            : `${config.bgColor} ${config.borderColor} backdrop-blur-md border-opacity-50 shadow-lg shadow-black/20`
-        }`}
-      >
-        <div className={`flex flex-col gap-3 p-4 ${isLightMode ? "text-gray-800" : "text-gray-100"}`}>
-          <div className="flex items-start gap-3">
-            <div className="shrink-0 mt-0.5">
-              <Icon className={config.iconColor} size={20} />
+      <div className="coco-alert-animate" style={alertStyle}>
+        <div style={contentStyle}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+              <div style={iconStyle}>
+                <Icon color={config.iconColor} size={20} />
+              </div>
+              <p style={messageStyle}>{alert.message}</p>
             </div>
-            <p className={`flex-1 text-sm leading-relaxed ${isLightMode ? "text-gray-800 font-medium" : "text-gray-100 font-medium"}`}>
-              {alert.message}
-            </p>
-          </div>
-          <div className="flex justify-end gap-3">
-            <button
-              onClick={() => {
-                confirmAlert.onCancel();
-                onClose(alert.id);
-              }}
-              className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                isLightMode
-                  ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                  : "bg-slate-800 hover:bg-slate-700 text-slate-200"
-              }`}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                confirmAlert.onConfirm();
-                onClose(alert.id);
-              }}
-              className="px-3 py-1 text-xs rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors"
-            >
-              Confirm
-            </button>
+            <div style={buttonContainerStyle}>
+              <button
+                onClick={() => {
+                  confirmAlert.onCancel();
+                  onClose(alert.id);
+                }}
+                style={cancelButtonStyle}
+                onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
+                onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  confirmAlert.onConfirm();
+                  onClose(alert.id);
+                }}
+                style={confirmButtonStyle}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ef4444'}
+              >
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -276,32 +412,23 @@ const AlertItem: React.FC<AlertItemProps> = ({
 
   // Default Alert
   return (
-    <div
-      className={`relative w-80 rounded-lg shadow-lg mb-3 overflow-hidden border animate-slideDown ${
-        isLightMode
-          ? "bg-white border-gray-200 shadow-gray-200"
-          : `${config.bgColor} ${config.borderColor} backdrop-blur-md border-opacity-50 shadow-lg shadow-black/20`
-      }`}
-    >
-      <div className="absolute top-0 left-0 right-0 h-0.5">
-        <div
-          className={`${config.progressColor} h-full`}
-          style={{ width: `${progress}%`, transition: "width 0.02s linear" }}
-        />
+    <div className="coco-alert-animate" style={alertStyle}>
+      <div style={progressBarStyle}>
+        <div style={progressFillStyle} />
       </div>
-      <div className={`flex items-start gap-3 p-4 ${isLightMode ? "text-gray-800" : "text-gray-100"}`}>
-        <div className="shrink-0 mt-0.5">
-          <Icon className={config.iconColor} size={20} />
+      <div style={contentStyle}>
+        <div style={iconStyle}>
+          <Icon color={config.iconColor} size={20} />
         </div>
-        <p className={`flex-1 text-sm leading-relaxed ${isLightMode ? "text-gray-800 font-medium" : "text-gray-100 font-medium"}`}>
-          {alert.message}
-        </p>
+        <p style={messageStyle}>{alert.message}</p>
         <button
           onClick={() => onClose(alert.id)}
-          className={`shrink-0 ${isLightMode ? "text-gray-500 hover:text-gray-700" : "text-gray-300 hover:text-gray-100"} transition-colors`}
+          style={closeButtonStyle}
+          onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+          onMouseOut={(e) => e.currentTarget.style.opacity = '0.7'}
           aria-label="Close"
         >
-          <X size={18} />
+          <X color={isLightMode ? '#6b7280' : '#d1d5db'} size={18} />
         </button>
       </div>
     </div>
@@ -327,21 +454,29 @@ export const AlertContainer: React.FC<AlertContainerProps> = ({
 
   return (
     <>
-      {Object.entries(alertsByPosition).map(([pos, posAlerts]) => (
-        <div
-          key={pos}
-          className="fixed top-5 right-5 z-[1000] w-full max-w-xs px-4"
-        >
-          {posAlerts.map((alert) => (
-            <AlertItem
-              key={alert.id}
-              alert={alert}
-              onClose={removeAlert}
-              isLightMode={isLightMode}
-            />
-          ))}
-        </div>
-      ))}
+      {Object.entries(alertsByPosition).map(([pos, posAlerts]) => {
+        const containerStyle: CSSProperties = {
+          position: 'fixed',
+          zIndex: 9999,
+          pointerEvents: 'none',
+          ...getPositionStyles(pos as AlertPosition),
+        };
+
+        return (
+          <div key={pos} style={containerStyle}>
+            <div style={{ pointerEvents: 'auto' }}>
+              {posAlerts.map((alert) => (
+                <AlertItem
+                  key={alert.id}
+                  alert={alert}
+                  onClose={removeAlert}
+                  isLightMode={isLightMode}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 };
@@ -432,7 +567,7 @@ export const useAlerts = () => {
 };
 
 // ==========================================
-// DEFAULT EXPORT (For easier imports)
+// DEFAULT EXPORT
 // ==========================================
 
 export default coco_Alert;
