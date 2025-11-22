@@ -1,17 +1,24 @@
 /**
- * CocoAlert - Universal React/Next.js Alert System
- * Works with: React, Next.js (App Router & Pages Router)
- * 
+ * CocoAlert - Zero-Config Alert System for React & Next.js
+ *
  * Installation:
  * npm install coco-alert
- * 
- * Usage:
- * import { coco_Alert, coco_confirm, useAlerts, AlertContainer } from 'coco-alert/react';
+ *
+ * Usage (SUPER SIMPLE - Just import and use!):
+ * import coco_Alert from 'coco-alert/react';
+ *
+ * coco_Alert.success('It works!');
+ * coco_Alert.error('Oops!');
+ * coco_Alert.warning('Be careful!');
+ * coco_Alert.info('FYI...');
+ *
+ * const confirmed = await coco_Alert.confirm('Delete this?');
  */
 
-"use client"; // For Next.js App Router
+"use client";
 
 import React, { useState, useEffect, CSSProperties } from "react";
+import { createRoot } from "react-dom/client";
 
 // ==========================================
 // TYPES
@@ -28,7 +35,7 @@ export type AlertPosition =
   | "bottom-right"
   | "bottom-center";
 
-export interface Alert {
+interface Alert {
   id: number;
   type: Exclude<AlertType, "confirm">;
   message: string;
@@ -36,7 +43,7 @@ export interface Alert {
   position?: AlertPosition;
 }
 
-export interface ConfirmAlert {
+interface ConfirmAlert {
   id: number;
   type: "confirm";
   message: string;
@@ -46,32 +53,49 @@ export interface ConfirmAlert {
   onCancel: () => void;
 }
 
-export interface AlertItemProps {
-  alert: Alert | ConfirmAlert;
-  onClose: (id: number) => void;
-  isLightMode: boolean;
-}
-
-export interface AlertContainerProps {
-  alerts: (Alert | ConfirmAlert)[];
-  removeAlert: (id: number) => void;
-  isLightMode: boolean;
-  position: AlertPosition;
-}
-
 // ==========================================
-// ICONS (Inline SVG)
+// ICONS
 // ==========================================
 
-const CheckCircle = ({ color, size = 20 }: { color: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const CheckCircle = ({
+  color,
+  size = 20,
+}: {
+  color: string;
+  size?: number;
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
     <polyline points="22 4 12 14.01 9 11.01" />
   </svg>
 );
 
-const AlertCircle = ({ color, size = 20 }: { color: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const AlertCircle = ({
+  color,
+  size = 20,
+}: {
+  color: string;
+  size?: number;
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="8" x2="12" y2="12" />
     <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -79,15 +103,39 @@ const AlertCircle = ({ color, size = 20 }: { color: string; size?: number }) => 
 );
 
 const Info = ({ color, size = 20 }: { color: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <circle cx="12" cy="12" r="10" />
     <line x1="12" y1="16" x2="12" y2="12" />
     <line x1="12" y1="8" x2="12.01" y2="8" />
   </svg>
 );
 
-const AlertTriangle = ({ color, size = 20 }: { color: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const AlertTriangle = ({
+  color,
+  size = 20,
+}: {
+  color: string;
+  size?: number;
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
     <line x1="12" y1="9" x2="12" y2="13" />
     <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -95,20 +143,24 @@ const AlertTriangle = ({ color, size = 20 }: { color: string; size?: number }) =
 );
 
 const X = ({ color, size = 18 }: { color: string; size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 
 // ==========================================
-// CONFIG WITH INLINE STYLES
+// CONFIG
 // ==========================================
-
-const ALERT_CONFIG = {
-  isLightMode: false,
-  defaultPosition: "top-right" as AlertPosition,
-};
 
 const alertConfig: Record<
   AlertType,
@@ -163,42 +215,6 @@ const alertConfig: Record<
   },
 };
 
-// Light mode colors
-const lightModeConfig: Record<
-  AlertType,
-  {
-    bgColor: string;
-    borderColor: string;
-    textColor: string;
-  }
-> = {
-  success: {
-    bgColor: "#dcfce7",
-    borderColor: "#86efac",
-    textColor: "#166534",
-  },
-  error: {
-    bgColor: "#fee2e2",
-    borderColor: "#fca5a5",
-    textColor: "#991b1b",
-  },
-  warning: {
-    bgColor: "#fef3c7",
-    borderColor: "#fcd34d",
-    textColor: "#854d0e",
-  },
-  info: {
-    bgColor: "#dbeafe",
-    borderColor: "#93c5fd",
-    textColor: "#1e40af",
-  },
-  confirm: {
-    bgColor: "#fef3c7",
-    borderColor: "#fcd34d",
-    textColor: "#854d0e",
-  },
-};
-
 // ==========================================
 // POSITION STYLES
 // ==========================================
@@ -211,7 +227,11 @@ const getPositionStyles = (position: AlertPosition): CSSProperties => {
     center: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
     "bottom-left": { bottom: "24px", left: "24px" },
     "bottom-right": { bottom: "24px", right: "24px" },
-    "bottom-center": { bottom: "24px", left: "50%", transform: "translateX(-50%)" },
+    "bottom-center": {
+      bottom: "24px",
+      left: "50%",
+      transform: "translateX(-50%)",
+    },
   };
   return positions[position];
 };
@@ -221,11 +241,11 @@ const getPositionStyles = (position: AlertPosition): CSSProperties => {
 // ==========================================
 
 const injectStyles = () => {
-  if (typeof document === 'undefined') return;
-  if (document.getElementById('coco-alert-styles')) return;
+  if (typeof document === "undefined") return;
+  if (document.getElementById("coco-alert-styles")) return;
 
-  const style = document.createElement('style');
-  style.id = 'coco-alert-styles';
+  const style = document.createElement("style");
+  style.id = "coco-alert-styles";
   style.textContent = `
     @keyframes cocoSlideIn {
       from {
@@ -248,14 +268,15 @@ const injectStyles = () => {
 // ALERT ITEM COMPONENT
 // ==========================================
 
-const AlertItem: React.FC<AlertItemProps> = ({
+const AlertItem = ({
   alert,
   onClose,
-  isLightMode,
+}: {
+  alert: Alert | ConfirmAlert;
+  onClose: (id: number) => void;
 }) => {
   const [progress, setProgress] = useState(100);
   const config = alertConfig[alert.type];
-  const lightConfig = lightModeConfig[alert.type];
   const Icon = config.icon;
 
   useEffect(() => {
@@ -280,101 +301,107 @@ const AlertItem: React.FC<AlertItemProps> = ({
   }, [alert, onClose]);
 
   const alertStyle: CSSProperties = {
-    position: 'relative',
-    width: '320px',
-    marginBottom: '12px',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    border: `1px solid ${isLightMode ? lightConfig.borderColor : config.borderColor}`,
-    backgroundColor: isLightMode ? lightConfig.bgColor : config.bgColor,
-    color: isLightMode ? lightConfig.textColor : config.textColor,
-    boxShadow: isLightMode 
-      ? '0 4px 12px rgba(0, 0, 0, 0.1)' 
-      : '0 4px 12px rgba(0, 0, 0, 0.3)',
-    backdropFilter: 'blur(8px)',
+    position: "relative",
+    width: "320px",
+    marginBottom: "12px",
+    borderRadius: "8px",
+    overflow: "hidden",
+    border: `1px solid ${config.borderColor}`,
+    backgroundColor: config.bgColor,
+    color: config.textColor,
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+    backdropFilter: "blur(8px)",
   };
 
   const progressBarStyle: CSSProperties = {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    height: '2px',
+    height: "2px",
   };
 
   const progressFillStyle: CSSProperties = {
-    height: '100%',
+    height: "100%",
     backgroundColor: config.progressColor,
     width: `${progress}%`,
-    transition: 'width 0.02s linear',
+    transition: "width 0.02s linear",
   };
 
   const contentStyle: CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '12px',
-    padding: '16px',
+    display: "flex",
+    alignItems: "flex-start",
+    gap: "12px",
+    padding: "16px",
   };
 
   const iconStyle: CSSProperties = {
     flexShrink: 0,
-    marginTop: '2px',
+    marginTop: "2px",
   };
 
   const messageStyle: CSSProperties = {
     flex: 1,
-    fontSize: '14px',
-    lineHeight: '1.5',
+    fontSize: "14px",
+    lineHeight: "1.5",
     fontWeight: 500,
   };
 
   const closeButtonStyle: CSSProperties = {
     flexShrink: 0,
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
+    background: "none",
+    border: "none",
+    cursor: "pointer",
     opacity: 0.7,
-    transition: 'opacity 0.2s',
+    transition: "opacity 0.2s",
     padding: 0,
   };
 
   const buttonContainerStyle: CSSProperties = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '12px',
-    marginTop: '12px',
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "12px",
+    marginTop: "12px",
   };
 
   const cancelButtonStyle: CSSProperties = {
-    padding: '6px 12px',
-    fontSize: '12px',
-    borderRadius: '6px',
-    border: 'none',
-    cursor: 'pointer',
-    backgroundColor: isLightMode ? '#e5e7eb' : '#1e293b',
-    color: isLightMode ? '#1f2937' : '#e2e8f0',
-    transition: 'background-color 0.2s',
+    padding: "6px 12px",
+    fontSize: "12px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    backgroundColor: "#1e293b",
+    color: "#e2e8f0",
+    transition: "background-color 0.2s",
   };
 
   const confirmButtonStyle: CSSProperties = {
-    padding: '6px 12px',
-    fontSize: '12px',
-    borderRadius: '6px',
-    border: 'none',
-    cursor: 'pointer',
-    backgroundColor: '#ef4444',
-    color: 'white',
-    transition: 'background-color 0.2s',
+    padding: "6px 12px",
+    fontSize: "12px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+    backgroundColor: "#ef4444",
+    color: "white",
+    transition: "background-color 0.2s",
   };
 
-  // Confirmation Dialog
   if (alert.type === "confirm") {
     const confirmAlert = alert as ConfirmAlert;
     return (
       <div className="coco-alert-animate" style={alertStyle}>
         <div style={contentStyle}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              width: "100%",
+            }}
+          >
+            <div
+              style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}
+            >
               <div style={iconStyle}>
                 <Icon color={config.iconColor} size={20} />
               </div>
@@ -387,8 +414,6 @@ const AlertItem: React.FC<AlertItemProps> = ({
                   onClose(alert.id);
                 }}
                 style={cancelButtonStyle}
-                onMouseOver={(e) => e.currentTarget.style.opacity = '0.8'}
-                onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
               >
                 Cancel
               </button>
@@ -398,8 +423,6 @@ const AlertItem: React.FC<AlertItemProps> = ({
                   onClose(alert.id);
                 }}
                 style={confirmButtonStyle}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ef4444'}
               >
                 Confirm
               </button>
@@ -410,7 +433,6 @@ const AlertItem: React.FC<AlertItemProps> = ({
     );
   }
 
-  // Default Alert
   return (
     <div className="coco-alert-animate" style={alertStyle}>
       <div style={progressBarStyle}>
@@ -424,11 +446,9 @@ const AlertItem: React.FC<AlertItemProps> = ({
         <button
           onClick={() => onClose(alert.id)}
           style={closeButtonStyle}
-          onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
-          onMouseOut={(e) => e.currentTarget.style.opacity = '0.7'}
           aria-label="Close"
         >
-          <X color={isLightMode ? '#6b7280' : '#d1d5db'} size={18} />
+          <X color="#d1d5db" size={18} />
         </button>
       </div>
     </div>
@@ -436,17 +456,31 @@ const AlertItem: React.FC<AlertItemProps> = ({
 };
 
 // ==========================================
-// ALERT CONTAINER COMPONENT
+// ALERT CONTAINER (AUTO-MANAGED)
 // ==========================================
 
-export const AlertContainer: React.FC<AlertContainerProps> = ({
-  alerts,
-  removeAlert,
-  isLightMode,
-  position,
-}) => {
+const AlertContainerComponent = () => {
+  const [alerts, setAlerts] = useState<(Alert | ConfirmAlert)[]>([]);
+
+  useEffect(() => {
+    const listener = (newAlerts: (Alert | ConfirmAlert)[]) => {
+      setAlerts(newAlerts);
+    };
+    listeners.push(listener);
+    setAlerts([...alertQueue]);
+
+    return () => {
+      listeners = listeners.filter((l) => l !== listener);
+    };
+  }, []);
+
+  const removeAlert = (id: number) => {
+    alertQueue = alertQueue.filter((alert) => alert.id !== id);
+    notifyListeners();
+  };
+
   const alertsByPosition = alerts.reduce((acc, alert) => {
-    const pos = alert.position || position;
+    const pos = alert.position || "top-right";
     acc[pos] = acc[pos] || [];
     acc[pos].push(alert);
     return acc;
@@ -456,22 +490,17 @@ export const AlertContainer: React.FC<AlertContainerProps> = ({
     <>
       {Object.entries(alertsByPosition).map(([pos, posAlerts]) => {
         const containerStyle: CSSProperties = {
-          position: 'fixed',
+          position: "fixed",
           zIndex: 9999,
-          pointerEvents: 'none',
+          pointerEvents: "none",
           ...getPositionStyles(pos as AlertPosition),
         };
 
         return (
           <div key={pos} style={containerStyle}>
-            <div style={{ pointerEvents: 'auto' }}>
+            <div style={{ pointerEvents: "auto" }}>
               {posAlerts.map((alert) => (
-                <AlertItem
-                  key={alert.id}
-                  alert={alert}
-                  onClose={removeAlert}
-                  isLightMode={isLightMode}
-                />
+                <AlertItem key={alert.id} alert={alert} onClose={removeAlert} />
               ))}
             </div>
           </div>
@@ -479,6 +508,26 @@ export const AlertContainer: React.FC<AlertContainerProps> = ({
       })}
     </>
   );
+};
+
+// ==========================================
+// AUTO-INJECT CONTAINER
+// ==========================================
+
+let containerMounted = false;
+
+const ensureContainer = () => {
+  if (typeof document === "undefined") return;
+  if (containerMounted) return;
+
+  const container = document.createElement("div");
+  container.id = "coco-alert-root";
+  document.body.appendChild(container);
+
+  const root = createRoot(container);
+  root.render(<AlertContainerComponent />);
+
+  containerMounted = true;
 };
 
 // ==========================================
@@ -491,12 +540,13 @@ let listeners: ((alerts: (Alert | ConfirmAlert)[]) => void)[] = [];
 const notifyListeners = () =>
   listeners.forEach((listener) => listener([...alertQueue]));
 
-export const addAlert = (
+const addAlert = (
   type: Exclude<AlertType, "confirm">,
   message: string,
-  duration = 5000,
-  position: AlertPosition = ALERT_CONFIG.defaultPosition
+  duration = 4000,
+  position: AlertPosition = "top-right"
 ) => {
+  ensureContainer();
   const alert: Alert = {
     id: Date.now() + Math.random(),
     type,
@@ -508,66 +558,40 @@ export const addAlert = (
   notifyListeners();
 };
 
-export const removeAlert = (id: number) => {
-  alertQueue = alertQueue.filter((alert) => alert.id !== id);
-  notifyListeners();
-};
-
 // ==========================================
 // PUBLIC API
 // ==========================================
 
-export const coco_Alert = {
-  success: (message: string, duration = 4000, position?: AlertPosition) =>
-    addAlert("success", message, duration, position),
-  error: (message: string, duration = 4000, position?: AlertPosition) =>
-    addAlert("error", message, duration, position),
-  warning: (message: string, duration = 4000, position?: AlertPosition) =>
-    addAlert("warning", message, duration, position),
-  info: (message: string, duration = 4000, position?: AlertPosition) =>
-    addAlert("info", message, duration, position),
+const coco_Alert = {
+  success: (message: string, duration?: number, position?: AlertPosition) =>
+    addAlert("success", message, duration || 4000, position),
+
+  error: (message: string, duration?: number, position?: AlertPosition) =>
+    addAlert("error", message, duration || 4000, position),
+
+  warning: (message: string, duration?: number, position?: AlertPosition) =>
+    addAlert("warning", message, duration || 4000, position),
+
+  info: (message: string, duration?: number, position?: AlertPosition) =>
+    addAlert("info", message, duration || 4000, position),
+
+  confirm: (message: string, position?: AlertPosition): Promise<boolean> => {
+    ensureContainer();
+    return new Promise((resolve) => {
+      const id = Date.now() + Math.random();
+      const confirmAlert: ConfirmAlert = {
+        id,
+        type: "confirm",
+        message,
+        position: position || "top-right",
+        duration: 0,
+        onConfirm: () => resolve(true),
+        onCancel: () => resolve(false),
+      };
+      alertQueue.push(confirmAlert);
+      notifyListeners();
+    });
+  },
 };
-
-export const coco_confirm = (
-  message: string,
-  position: AlertPosition = ALERT_CONFIG.defaultPosition
-): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const id = Date.now() + Math.random();
-    const confirmAlert: ConfirmAlert = {
-      id,
-      type: "confirm",
-      message,
-      position,
-      duration: 0,
-      onConfirm: () => resolve(true),
-      onCancel: () => resolve(false),
-    };
-    alertQueue.push(confirmAlert);
-    notifyListeners();
-  });
-};
-
-// ==========================================
-// HOOK
-// ==========================================
-
-export const useAlerts = () => {
-  const [alerts, setAlerts] = useState<(Alert | ConfirmAlert)[]>([]);
-  
-  useEffect(() => {
-    listeners.push(setAlerts);
-    setAlerts([...alertQueue]);
-    return () => {
-      listeners = listeners.filter((l) => l !== setAlerts);
-    };
-  }, []);
-  
-  return { alerts, removeAlert };
-};
-
-// ==========================================
-// DEFAULT EXPORT
-// ==========================================
 
 export default coco_Alert;

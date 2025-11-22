@@ -1,126 +1,94 @@
-<!-- [![npm version](https://img.shields.io/npm/v/@cocobase/alert?style=flat-square)](https://www.npmjs.com/package/@cocobase/alert)
-[![downloads](https://img.shields.io/npm/dm/@cocobase/alert?style=flat-square)](https://www.npmjs.com/package/@cocobase/alert)
-[![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](https://github.com/cocobase-team/alert/blob/main/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/cocobase-team/alert/pulls) -->
-
 # 🥥 CocoAlert
 
 <div align="center">
 
-![CocoAlert Banner](https://img.shields.io/badge/CocoAlert-Toast%20Notifications-orange?style=for-the-badge&logo=react)
+![CocoAlert Banner](https://img.shields.io/badge/CocoAlert-Zero%20Config%20Alerts-orange?style=for-the-badge&logo=react)
 
-**Beautiful, lightweight toast notifications for React & Next.js**
+**The simplest toast notification library for React & Next.js**
 
 [![npm version](https://img.shields.io/npm/v/coco-alert?style=flat-square&color=success)](https://www.npmjs.com/package/coco-alert)
 [![downloads](https://img.shields.io/npm/dm/coco-alert?style=flat-square&color=blue)](https://www.npmjs.com/package/coco-alert)
 [![license](https://img.shields.io/npm/l/coco-alert?style=flat-square&color=yellow)](https://github.com/cocobase-team/coco_Alert/blob/main/LICENSE)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/coco-alert?style=flat-square&color=green)](https://bundlephobia.com/package/coco-alert)
 
-[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [API Reference](#-api-reference) • [Examples](#-examples)
+**Zero configuration. Just import and use. That's it.**
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ Why CocoAlert?
 
-<table>
-<tr>
-<td width="50%">
+```javascript
+// Other libraries 😩
+import { ToastContainer, toast } from 'other-lib';
 
-### 🎨 **Beautiful Design**
+function App() {
+  return (
+    <>
+      <ToastContainer position="top-right" autoClose={5000} />
+      <button onClick={() => toast.success('Hello')}>Click</button>
+    </>
+  );
+}
 
-- 4 alert types (success, error, warning, info)
-- Light & dark mode support
-- Smooth animations
-- Customizable positions
+// CocoAlert 🔥
+import coco_Alert from 'coco-alert/react';
 
-</td>
-<td width="50%">
+function App() {
+  return (
+    <button onClick={() => coco_Alert.success('Hello')}>Click</button>
+  );
+}
+```
 
-### ⚡ **Zero Dependencies**
-
-- No external icon libraries
-- Inline SVG icons
-- Pure React/TypeScript
-- ~3KB gzipped
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🔧 **Framework Support**
-
-- ✅ React 16.8+
-- ✅ Next.js App Router
-- ✅ Next.js Pages Router
-- ✅ TypeScript ready
-
-</td>
-<td width="50%">
-
-### 🎭 **Advanced Features**
-
-- Confirmation dialogs
-- Auto-dismiss timers
-- Progress indicators
-- Position control
-
-</td>
-</tr>
-</table>
+**No setup. No providers. No containers. Just works.** ✨
 
 ---
 
 ## 📦 Installation
 
 ```bash
-# Using npm
 npm install coco-alert
-
-# Using yarn
-yarn add coco-alert
-
-# Using pnpm
-pnpm add coco-alert
 ```
-
-> **Note:** Make sure you have `react` and `react-dom` installed (version 16.8 or higher)
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Usage (It's THIS Easy!)
+
+### **Step 1: Import**
+```javascript
+import coco_Alert from 'coco-alert/react';
+```
+
+### **Step 2: Use It Anywhere**
+```javascript
+coco_Alert.success('Operation successful! 🎉');
+coco_Alert.error('Something went wrong! ❌');
+coco_Alert.warning('Be careful! ⚠️');
+coco_Alert.info('Just so you know... ℹ️');
+```
+
+**That's literally it. No setup, no providers, no containers!**
+
+---
+
+## 📖 Complete Examples
 
 ### **React (Vite, CRA)**
 
 ```jsx
-import { coco_Alert, useAlerts, AlertContainer } from "coco-alert/react";
-import { useState } from "react";
+import coco_Alert from 'coco-alert/react';
 
 function App() {
-  const { alerts, removeAlert } = useAlerts();
-  const [isLightMode, setIsLightMode] = useState(false);
+  const handleClick = () => {
+    coco_Alert.success('Button clicked!');
+  };
 
   return (
     <div>
-      <h1>Welcome to CocoAlert!</h1>
-
-      {/* Trigger alerts */}
-      <button onClick={() => coco_Alert.success("Operation successful! 🎉")}>
-        Success
-      </button>
-      <button onClick={() => coco_Alert.error("Something went wrong! ❌")}>
-        Error
-      </button>
-
-      {/* Alert Container - Required! */}
-      <AlertContainer
-        alerts={alerts}
-        removeAlert={removeAlert}
-        isLightMode={isLightMode}
-        position="top-right"
-      />
+      <h1>My App</h1>
+      <button onClick={handleClick}>Click Me</button>
     </div>
   );
 }
@@ -131,28 +99,18 @@ export default App;
 ### **Next.js App Router**
 
 ```tsx
-"use client"; // Required for App Router!
+'use client'; // Required for App Router!
 
-import { coco_Alert, useAlerts, AlertContainer } from "coco-alert/react";
-import { useState } from "react";
+import coco_Alert from 'coco-alert/react';
 
 export default function Page() {
-  const { alerts, removeAlert } = useAlerts();
-  const [isLightMode, setIsLightMode] = useState(false);
-
   return (
-    <>
-      <button onClick={() => coco_Alert.info("Hello from Next.js! 👋")}>
-        Show Info
+    <div>
+      <h1>Next.js App Router</h1>
+      <button onClick={() => coco_Alert.info('Hello from Next.js! 👋')}>
+        Show Alert
       </button>
-
-      <AlertContainer
-        alerts={alerts}
-        removeAlert={removeAlert}
-        isLightMode={isLightMode}
-        position="top-right"
-      />
-    </>
+    </div>
   );
 }
 ```
@@ -160,359 +118,375 @@ export default function Page() {
 ### **Next.js Pages Router**
 
 ```tsx
-import { coco_Alert, useAlerts, AlertContainer } from "coco-alert/react";
-import { useState } from "react";
+import coco_Alert from 'coco-alert/react';
 
 export default function Home() {
-  const { alerts, removeAlert } = useAlerts();
-  const [isLightMode, setIsLightMode] = useState(false);
-
   return (
-    <>
-      <button onClick={() => coco_Alert.warning("Be careful! ⚠️")}>
-        Show Warning
+    <div>
+      <h1>Next.js Pages Router</h1>
+      <button onClick={() => coco_Alert.success('It works! 🎉')}>
+        Show Alert
       </button>
-
-      <AlertContainer
-        alerts={alerts}
-        removeAlert={removeAlert}
-        isLightMode={isLightMode}
-        position="top-right"
-      />
-    </>
+    </div>
   );
 }
 ```
 
 ---
 
-## 📖 API Reference
+## 🎯 Real-World Examples
 
-### **Alert Types**
-
-CocoAlert provides 4 alert types:
+### **Form Submission**
 
 ```javascript
-// Success notification
-coco_Alert.success(message, duration?, position?);
+import coco_Alert from 'coco-alert/react';
 
-// Error notification
-coco_Alert.error(message, duration?, position?);
-
-// Warning notification
-coco_Alert.warning(message, duration?, position?);
-
-// Info notification
-coco_Alert.info(message, duration?, position?);
-```
-
-#### Parameters
-
-| Parameter  | Type            | Default       | Description              |
-| ---------- | --------------- | ------------- | ------------------------ |
-| `message`  | `string`        | _required_    | The message to display   |
-| `duration` | `number`        | `4000`        | Duration in milliseconds |
-| `position` | `AlertPosition` | `"top-right"` | Position on screen       |
-
-### **Positions**
-
-Available positions for alerts:
-
-```typescript
-type AlertPosition =
-  | "top-left"
-  | "top-right"
-  | "top-center"
-  | "center"
-  | "bottom-left"
-  | "bottom-right"
-  | "bottom-center";
-```
-
-#### Example with Position
-
-```javascript
-// Show at top-left corner
-coco_Alert.success("Saved!", 3000, "top-left");
-
-// Show at bottom-center
-coco_Alert.error("Failed to save", 5000, "bottom-center");
-```
-
-### **Confirmation Dialog**
-
-```javascript
-const confirmed = await coco_confirm(message, position?);
-
-if (confirmed) {
-  // User clicked "Confirm"
-  console.log('User confirmed!');
-} else {
-  // User clicked "Cancel"
-  console.log('User cancelled!');
-}
-```
-
-#### Example
-
-```javascript
-async function handleDelete() {
-  const confirmed = await coco_confirm("Are you sure you want to delete this?");
-
-  if (confirmed) {
-    // Proceed with deletion
-    await deleteItem();
-    coco_Alert.success("Item deleted successfully!");
-  } else {
-    coco_Alert.info("Deletion cancelled");
+async function handleSubmit(e) {
+  e.preventDefault();
+  
+  try {
+    await submitForm(formData);
+    coco_Alert.success('Form submitted successfully! ✅');
+  } catch (error) {
+    coco_Alert.error('Failed to submit form. Please try again.');
   }
 }
 ```
 
-### **useAlerts Hook**
-
-The hook that manages alert state:
-
-```typescript
-const { alerts, removeAlert } = useAlerts();
-```
-
-Returns:
-
-- `alerts`: Array of current alerts
-- `removeAlert`: Function to manually remove an alert by ID
-
-### **AlertContainer Component**
-
-Required component to render alerts:
-
-```tsx
-<AlertContainer
-  alerts={alerts}
-  removeAlert={removeAlert}
-  isLightMode={false}
-  position="top-right"
-/>
-```
-
-#### Props
-
-| Prop          | Type            | Required | Default | Description                        |
-| ------------- | --------------- | -------- | ------- | ---------------------------------- |
-| `alerts`      | `Alert[]`       | ✅ Yes   | -       | Alerts from `useAlerts()`          |
-| `removeAlert` | `function`      | ✅ Yes   | -       | Remove function from `useAlerts()` |
-| `isLightMode` | `boolean`       | ✅ Yes   | -       | Theme mode (light/dark)            |
-| `position`    | `AlertPosition` | ✅ Yes   | -       | Default position for alerts        |
-
----
-
-## 🎯 Examples
-
-### **Basic Alerts**
+### **API Calls**
 
 ```javascript
-// Simple success
-coco_Alert.success("Profile updated!");
+import coco_Alert from 'coco-alert/react';
 
-// Error with custom duration (10 seconds)
-coco_Alert.error("Failed to connect to server", 10000);
-
-// Warning at different position
-coco_Alert.warning("Your session will expire soon", 5000, "top-center");
-
-// Info notification
-coco_Alert.info("New features available!");
-```
-
-### **Form Submission**
-
-```jsx
-async function handleSubmit(e) {
-  e.preventDefault();
-
+async function fetchData() {
   try {
-    await submitForm(formData);
-    coco_Alert.success("Form submitted successfully! ✅");
+    const response = await fetch('/api/data');
+    if (!response.ok) throw new Error('Failed to fetch');
+    
+    const data = await response.json();
+    coco_Alert.success('Data loaded successfully!');
+    return data;
   } catch (error) {
-    coco_Alert.error("Failed to submit form. Please try again.");
+    coco_Alert.error('Failed to load data');
   }
 }
 ```
 
 ### **Delete Confirmation**
 
-```jsx
-async function handleDelete(id) {
-  const confirmed = await coco_confirm(
-    "This action cannot be undone. Delete this item?"
-  );
+```javascript
+import coco_Alert from 'coco-alert/react';
 
+async function handleDelete(id) {
+  // Ask for confirmation
+  const confirmed = await coco_Alert.confirm('Delete this item? This cannot be undone.');
+  
   if (confirmed) {
     try {
       await deleteItem(id);
-      coco_Alert.success("Item deleted successfully!");
+      coco_Alert.success('Item deleted successfully!');
     } catch (error) {
-      coco_Alert.error("Failed to delete item");
+      coco_Alert.error('Failed to delete item');
     }
+  } else {
+    coco_Alert.info('Deletion cancelled');
   }
 }
 ```
 
-### **Light/Dark Mode Toggle**
-
-```jsx
-function App() {
-  const { alerts, removeAlert } = useAlerts();
-  const [isLightMode, setIsLightMode] = useState(false);
-
-  return (
-    <>
-      <button onClick={() => setIsLightMode(!isLightMode)}>Toggle Theme</button>
-
-      <AlertContainer
-        alerts={alerts}
-        removeAlert={removeAlert}
-        isLightMode={isLightMode}
-        position="top-right"
-      />
-    </>
-  );
-}
-```
-
-### **Multiple Positions**
+### **File Upload**
 
 ```javascript
-// Top notifications
-coco_Alert.info("Loading...", 2000, "top-center");
+import coco_Alert from 'coco-alert/react';
 
-// Bottom notifications
-coco_Alert.success("Saved to drafts", 3000, "bottom-right");
+async function handleFileUpload(file) {
+  if (file.size > 5000000) {
+    coco_Alert.warning('File size must be less than 5MB');
+    return;
+  }
 
-// Center for important messages
-coco_Alert.warning("Action required!", 5000, "center");
-```
-
-### **Custom Durations**
-
-```javascript
-// Quick notification (1 second)
-coco_Alert.success("Copied!", 1000);
-
-// Standard notification (4 seconds - default)
-coco_Alert.info("Changes saved");
-
-// Long notification (10 seconds)
-coco_Alert.error("Critical error occurred. Please contact support.", 10000);
-```
-
----
-
-## 🎨 Styling
-
-CocoAlert uses **Tailwind CSS** utility classes for styling. Make sure your project has Tailwind configured.
-
-### **Without Tailwind?**
-
-If you're not using Tailwind, the component injects basic keyframe animations automatically. However, you may want to add custom styles:
-
-```css
-/* Your global CSS file */
-.coco-alert-container {
-  /* Add custom styles here */
+  try {
+    await uploadFile(file);
+    coco_Alert.success('File uploaded successfully! 📁');
+  } catch (error) {
+    coco_Alert.error('Upload failed. Please try again.');
+  }
 }
 ```
 
 ---
 
-## 🛠️ TypeScript Support
+## 📚 API Reference
 
-CocoAlert is written in TypeScript and includes full type definitions.
+### **Alert Methods**
 
-```typescript
-import {
-  coco_Alert,
-  coco_confirm,
-  useAlerts,
-  AlertContainer,
-  Alert,
-  AlertType,
-  AlertPosition,
-} from "coco-alert/react";
+```javascript
+coco_Alert.success(message, duration?, position?);
+coco_Alert.error(message, duration?, position?);
+coco_Alert.warning(message, duration?, position?);
+coco_Alert.info(message, duration?, position?);
+```
 
-// TypeScript will provide full autocomplete and type checking!
+#### **Parameters**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `message` | `string` | *required* | The message to display |
+| `duration` | `number` | `4000` | Duration in milliseconds (4 seconds) |
+| `position` | `AlertPosition` | `"top-right"` | Position on screen |
+
+#### **Examples**
+
+```javascript
+// Simple alert (4 seconds, top-right)
+coco_Alert.success('Saved!');
+
+// Custom duration (10 seconds)
+coco_Alert.error('Critical error', 10000);
+
+// Custom position
+coco_Alert.info('Loading...', 3000, 'top-center');
+
+// All options
+coco_Alert.warning('Session expiring soon', 5000, 'bottom-right');
 ```
 
 ---
 
-## ⚙️ Configuration
+### **Confirmation Dialog**
 
-### **Default Configuration**
-
-```typescript
-const ALERT_CONFIG = {
-  isLightMode: false, // Dark mode by default
-  defaultPosition: "top-right", // Default position
-};
+```javascript
+const confirmed = await coco_Alert.confirm(message, position?);
 ```
 
-### **Alert Colors**
+Returns a **Promise** that resolves to:
+- `true` if user clicks "Confirm"
+- `false` if user clicks "Cancel"
 
-| Type    | Color  | Border    | Icon |
-| ------- | ------ | --------- | ---- |
-| Success | Green  | Green/50  | ✓    |
-| Error   | Red    | Red/50    | ✕    |
-| Warning | Yellow | Yellow/50 | ⚠    |
-| Info    | Blue   | Blue/50   | ℹ    |
+#### **Examples**
+
+```javascript
+// Simple confirmation
+const result = await coco_Alert.confirm('Are you sure?');
+if (result) {
+  console.log('User confirmed!');
+}
+
+// With custom position
+const result = await coco_Alert.confirm('Delete this?', 'center');
+
+// In async function
+async function handleAction() {
+  const confirmed = await coco_Alert.confirm('Proceed with this action?');
+  
+  if (confirmed) {
+    // Do something
+    coco_Alert.success('Action completed!');
+  }
+}
+```
 
 ---
 
-## 🐛 Common Issues
+### **Positions**
 
-### **Issue: Alerts not showing**
+Available positions for alerts:
 
-Make sure you've added the `<AlertContainer>` component:
-
-```jsx
-<AlertContainer
-  alerts={alerts}
-  removeAlert={removeAlert}
-  isLightMode={isLightMode}
-  position="top-right"
-/>
+```typescript
+type AlertPosition = 
+  | "top-left" 
+  | "top-right"      // Default
+  | "top-center"
+  | "center"
+  | "bottom-left" 
+  | "bottom-right" 
+  | "bottom-center";
 ```
 
-### **Issue: TypeScript errors**
+#### **Position Examples**
+
+```javascript
+// Top positions
+coco_Alert.info('Top left', 3000, 'top-left');
+coco_Alert.info('Top center', 3000, 'top-center');
+coco_Alert.info('Top right', 3000, 'top-right');
+
+// Center
+coco_Alert.warning('Center alert', 3000, 'center');
+
+// Bottom positions
+coco_Alert.success('Bottom left', 3000, 'bottom-left');
+coco_Alert.success('Bottom center', 3000, 'bottom-center');
+coco_Alert.success('Bottom right', 3000, 'bottom-right');
+```
+
+---
+
+## 🎨 Features
+
+<table>
+<tr>
+<td width="50%">
+
+### ⚡ **Zero Configuration**
+- No setup required
+- No providers needed
+- No containers to add
+- Just import and use
+
+</td>
+<td width="50%">
+
+### 🎯 **Smart Defaults**
+- Auto-dismisses after 4s
+- Shows at top-right
+- Dark theme by default
+- Smooth animations
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🎨 **Beautiful Design**
+- 4 alert types with colors
+- Progress bar indicator
+- Smooth slide-in animation
+- Glassmorphism effects
+
+</td>
+<td width="50%">
+
+### 📦 **Tiny Bundle**
+- Zero dependencies
+- Pure inline styles
+- ~3KB gzipped
+- No CSS imports needed
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🔧 **Framework Support**
+- ✅ React 16.8+
+- ✅ Next.js App Router
+- ✅ Next.js Pages Router
+- ✅ TypeScript ready
+
+</td>
+<td width="50%">
+
+### 🎭 **Advanced Features**
+- Confirmation dialogs
+- Custom durations
+- 7 position options
+- Auto-stacking alerts
+
+</td>
+</tr>
+</table>
+
+---
+
+## 💡 Pro Tips
+
+### **Multiple Alerts**
+```javascript
+// Show multiple alerts - they stack automatically!
+coco_Alert.info('Loading...');
+coco_Alert.success('Step 1 complete');
+coco_Alert.success('Step 2 complete');
+coco_Alert.success('All done! 🎉');
+```
+
+### **Quick Notifications**
+```javascript
+// 1 second quick notification
+coco_Alert.success('Copied!', 1000);
+```
+
+### **Long Messages**
+```javascript
+// 10 second notification for important messages
+coco_Alert.error(
+  'Critical error occurred. Please contact support at support@example.com',
+  10000
+);
+```
+
+### **Center Important Alerts**
+```javascript
+// Use center position for critical messages
+coco_Alert.warning('Your session will expire in 5 minutes', 5000, 'center');
+```
+
+---
+
+## 🎨 Alert Types & Colors
+
+| Type | Color | Use Case | Icon |
+|------|-------|----------|------|
+| **Success** | Green | Successful operations, confirmations | ✓ |
+| **Error** | Red | Errors, failed operations | ✕ |
+| **Warning** | Yellow | Warnings, cautions | ⚠ |
+| **Info** | Blue | General information, tips | ℹ |
+| **Confirm** | Yellow | User confirmations | ? |
+
+---
+
+## 🐛 Troubleshooting
+
+### **Alerts not showing?**
+
+Make sure you've imported correctly:
+```javascript
+// ✅ Correct
+import coco_Alert from 'coco-alert/react';
+
+// ❌ Wrong
+import { coco_Alert } from 'coco-alert/react';
+```
+
+### **TypeScript errors?**
 
 Install React types:
-
 ```bash
 npm install --save-dev @types/react @types/react-dom
 ```
 
-### **Issue: Styles not working**
+### **Next.js App Router issues?**
 
-Ensure Tailwind CSS is configured in your project. Add to `tailwind.config.js`:
-
+Add `'use client';` at the top of your file:
 ```javascript
-module.exports = {
-  content: [
-    "./node_modules/coco-alert/**/*.{js,ts,jsx,tsx}",
-    // ... your other paths
-  ],
-};
+'use client';
+
+import coco_Alert from 'coco-alert/react';
 ```
+
+---
+
+## 📊 Comparison with Other Libraries
+
+| Feature | CocoAlert | react-toastify | react-hot-toast | sonner |
+|---------|-----------|----------------|-----------------|--------|
+| Setup Required | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes |
+| Provider/Container | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes |
+| Bundle Size | 3KB | 8KB | 4KB | 6KB |
+| Dependencies | 0 | 2 | 1 | 3 |
+| TypeScript | ✅ Built-in | ✅ Yes | ✅ Yes | ✅ Yes |
+| Confirmation Dialog | ✅ Built-in | ❌ No | ❌ No | ❌ No |
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please check out our [GitHub repository](https://github.com/cocobase-team/coco_Alert).
+We welcome contributions! Here's how:
 
 1. Fork the repo
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
+2. Create a branch: `git checkout -b feature/amazing-feature`
 3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
+4. Push: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
 ---
@@ -525,10 +499,19 @@ MIT © [Cocobase Team](https://github.com/cocobase-team)
 
 ## 🔗 Links
 
-- **NPM Package**: [npmjs.com/package/coco-alert](https://www.npmjs.com/package/coco-alert)
-- **GitHub Repository**: [github.com/cocobase-team/coco_Alert](https://github.com/cocobase-team/coco_Alert)
-- **Report Issues**: [GitHub Issues](https://github.com/cocobase-team/coco_Alert/issues)
+- **NPM**: [npmjs.com/package/coco-alert](https://www.npmjs.com/package/coco-alert)
+- **GitHub**: [github.com/cocobase-team/coco_Alert](https://github.com/cocobase-team/coco_Alert)
+- **Issues**: [GitHub Issues](https://github.com/cocobase-team/coco_Alert/issues)
 - **Cocobase**: [cocobase.buzz](https://cocobase.buzz)
+
+---
+
+## ❤️ Support
+
+If you find CocoAlert helpful:
+- ⭐ Star us on [GitHub](https://github.com/cocobase-team/coco_Alert)
+- 🐦 Share on [Twitter](https://twitter.com)
+- 📦 Try our other tools at [Cocobase](https://cocobase.buzz)
 
 ---
 
@@ -536,6 +519,6 @@ MIT © [Cocobase Team](https://github.com/cocobase-team)
 
 **Made with 💙 by [Dycoder](https://github.com/cocobase-team)**
 
-⭐ Star us on GitHub if you find this useful!
+*The simplest alert library you'll ever use.*
 
 </div>
